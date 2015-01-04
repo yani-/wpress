@@ -4,6 +4,19 @@
 
 WordPress archive format
 
+## Quick Start
+```
+// create new archive and add a file to it
+archiver, _ := NewWriter("test.wpress")
+archiver.AddFile("file-to-add.txt")
+archiver.Close()
+
+// create a new archive and add a directory to it
+archiver, _ := NewWriter("test.wpress")
+archiver.AddDirectory("/path/to/directory/to/add")
+archiver.Close()
+```
+
 ## License
 
 This project is licensed under the MIT open source license.
