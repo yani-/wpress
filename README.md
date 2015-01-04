@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/yani-/wpress.svg?branch=master)](https://travis-ci.org/yani-/wpress)
 [![Coverage Status](https://coveralls.io/repos/yani-/wpress/badge.png?branch=master)](https://coveralls.io/r/yani-/wpress?branch=master)
+[![GoDoc](https://godoc.org/github.com/yani-/wpress?status.svg)](https://godoc.org/github.com/yani-/wpress)
 
 # wpress
 
