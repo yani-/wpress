@@ -40,15 +40,12 @@ const (
 	prefixSize   = 4096 // maximum number of bytes allowed  for prefix
 )
 
-/**
- * Header block format of a file
- *
- * Field Name    Offset    Length    Contents
- * Name               0       255    filename (no path, no slash)
- * Size             255        14    length of file contents
- * Mtime            269        12    last modification date
- * Prefix           281      4096    path name, no trailing slashes
- */
+// Header block format of a file
+// Field Name    Offset    Length    Contents
+// Name               0       255    filename (no path, no slash)
+// Size             255        14    length of file contents
+// Mtime            269        12    last modification date
+// Prefix           281      4096    path name, no trailing slashes
 type Header struct {
 	Name   []byte
 	Size   []byte
@@ -56,6 +53,7 @@ type Header struct {
 	Prefix []byte
 }
 
+// PopulateFromBytes populates header struct from bytes array
 func (h *Header) PopulateFromBytes(block []byte) {
 	h.Name = block[0:255]
 	h.Size = block[255:269]
@@ -63,9 +61,7 @@ func (h *Header) PopulateFromBytes(block []byte) {
 	h.Prefix = block[281:4377]
 }
 
-/**
- * Populate name, size, mtime, and prefix from passed filename
- */
+// PopulateFromFilename populates header struct from passed filename
 func (h *Header) PopulateFromFilename(filename string) error {
 
 	// try to open the file
@@ -130,9 +126,7 @@ func (h *Header) PopulateFromFilename(filename string) error {
 	return nil
 }
 
-/**
- * Return byte sequence of header block populated with data
- */
+// GetHeaderBlock returns byte sequence of header block populated with data
 func (h Header) GetHeaderBlock() []byte {
 	block := append(h.Name, h.Size...)
 	block = append(block, h.Mtime...)
@@ -140,15 +134,14 @@ func (h Header) GetHeaderBlock() []byte {
 	return block
 }
 
+// GetSize returns content size
 func (h Header) GetSize() (int, error) {
 	// remove any trailing zero bytes, convert to string, then convert to integer
 	return strconv.Atoi(string(bytes.Trim(h.Size, "\x00")))
 }
 
-/**
- * Return byte sequence describing EOF
- */
-func (h Header) GetEofBlock() []byte {
+// GetEOFBlock returns byte sequence describing EOF
+func (h Header) GetEOFBlock() []byte {
 	// generate zero-byte sequence of length headerSize
 	return bytes.Repeat([]byte("\x00"), headerSize)
 }

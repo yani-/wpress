@@ -30,12 +30,14 @@ import (
 	"os"
 )
 
+// Reader structure
 type Reader struct {
 	Filename      string
 	File          *os.File
 	NumberOfFiles int
 }
 
+// NewReader creates a new Reader instance and calls its constructor
 func NewReader(filename string) (*Reader, error) {
 	// create a new instance of Reader
 	r := &Reader{filename, nil, 0}
@@ -50,6 +52,7 @@ func NewReader(filename string) (*Reader, error) {
 	return r, nil
 }
 
+// Init is the constructor of Reader struct
 func (r *Reader) Init() error {
 	// try to open the file
 	file, err := os.Open(r.Filename)
@@ -63,16 +66,19 @@ func (r *Reader) Init() error {
 	return nil
 }
 
+// ExtractFile extracts file that matches tha filename and path from archive
 func (r Reader) ExtractFile(filename string, path string) ([]byte, error) {
 	// TODO: implement
 	return nil, nil
 }
 
+// Extract all files from archive
 func (r Reader) Extract(s string) error {
 	// TODO: implement
 	return nil
 }
 
+// GetHeaderBlock reads and returns header block from archive
 func (r Reader) GetHeaderBlock() ([]byte, error) {
 	// create buffer to keep the header block
 	block := make([]byte, headerSize)
@@ -90,6 +96,7 @@ func (r Reader) GetHeaderBlock() ([]byte, error) {
 	return block, nil
 }
 
+// GetFilesCount returns the number of files in archive
 func (r Reader) GetFilesCount() (int, error) {
 	// test if we have enumerated the archive already
 	if r.NumberOfFiles != 0 {
@@ -111,7 +118,7 @@ func (r Reader) GetFilesCount() (int, error) {
 		h := &Header{}
 
 		// check if block equals EOF sequence
-		if bytes.Compare(block, h.GetEofBlock()) == 0 {
+		if bytes.Compare(block, h.GetEOFBlock()) == 0 {
 			// EOF reached, stop the loop
 			break
 		}

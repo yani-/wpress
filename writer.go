@@ -29,15 +29,14 @@ import (
 	"os"
 )
 
+// Writer structure
 type Writer struct {
 	Filename   string
 	File       *os.File
 	FilesAdded int
 }
 
-/**
- * Create new Writer instance
- */
+// NewWriter creates new Writer instance
 func NewWriter(filename string) (*Writer, error) {
 	// create a new instance of Writer
 	w := &Writer{filename, nil, 0}
@@ -52,9 +51,7 @@ func NewWriter(filename string) (*Writer, error) {
 	return w, nil
 }
 
-/**
- * Writer constructor
- */
+// Init is Writer constructor
 func (w *Writer) Init() error {
 	// try to create the file
 	file, err := os.Create(w.Filename)
@@ -68,9 +65,7 @@ func (w *Writer) Init() error {
 	return nil
 }
 
-/**
- * Add a file to the archive
- */
+// AddFile addd a file to the archive
 func (w *Writer) AddFile(filename string) error {
 	// populate header block from the filename passed
 	h := &Header{}
@@ -126,14 +121,12 @@ func (w *Writer) AddFile(filename string) error {
 	}
 
 	// file was added to the archive, increment fileAdded
-	w.FilesAdded += 1
+	w.FilesAdded++
 
 	return nil
 }
 
-/**
- * Add a directory to the archive
- */
+// AddDirectory adds a directory to the archive
 func (w *Writer) AddDirectory(path string) error {
 	fiArray, err := ioutil.ReadDir(path)
 	if err != nil {
@@ -156,9 +149,7 @@ func (w *Writer) AddDirectory(path string) error {
 	return nil
 }
 
-/**
- * Closes the archive, appends EOF sequence to the end of the file
- */
+// Close appends EOF sequence to the end of the file and closes the file
 func (w Writer) Close() error {
 	// if we haven't added any files, we don't append EOF sequence
 	if w.FilesAdded == 0 {
@@ -168,7 +159,7 @@ func (w Writer) Close() error {
 	h := &Header{}
 
 	// write eof sequence
-	_, err := w.File.Write(h.GetEofBlock())
+	_, err := w.File.Write(h.GetEOFBlock())
 	if err != nil {
 		return err
 	}

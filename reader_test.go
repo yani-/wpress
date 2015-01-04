@@ -31,12 +31,13 @@ import (
 )
 
 const (
-	TEST_DATA_NAME    = "testdata"
-	TEST_ARCHIVE_NAME = "test_archive.wpress"
+	TestDataName    = "testdata"
+	TestArchiveName = "test_archive.wpress"
 )
 
-var pathToTestData string = ""
+var pathToTestData string
 
+// _getPathToTests returns absolute path to tests folder
 func _getPathToTests(t *testing.T) string {
 	if pathToTestData != "" {
 		return pathToTestData
@@ -47,16 +48,14 @@ func _getPathToTests(t *testing.T) string {
 		t.Errorf("Failed to get current working dir: %s", err)
 	}
 
-	pathToTestData = cwd + string(os.PathSeparator) + TEST_DATA_NAME
+	pathToTestData = cwd + string(os.PathSeparator) + TestDataName
 	return pathToTestData
 }
 
-/**
- * Test creating a new reader
- */
+// TestNewReader tests creating a new reader
 func TestNewReader(t *testing.T) {
 	path := _getPathToTests(t)
-	filename := path + string(os.PathSeparator) + TEST_ARCHIVE_NAME
+	filename := path + string(os.PathSeparator) + TestArchiveName
 	r, err := NewReader(filename)
 	if err != nil {
 		t.Errorf("Unable to create a new Reader instance: %s", err)
@@ -69,9 +68,10 @@ func TestNewReader(t *testing.T) {
 	}
 }
 
+// TestReaderInit tests Reader contrustor
 func TestReaderInit(t *testing.T) {
 	path := _getPathToTests(t)
-	filename := path + string(os.PathSeparator) + TEST_ARCHIVE_NAME
+	filename := path + string(os.PathSeparator) + TestArchiveName
 	r, err := NewReader(filename)
 	if err != nil {
 		t.Errorf("Unable to create a new Reader instance: %s", err)
@@ -81,23 +81,17 @@ func TestReaderInit(t *testing.T) {
 	}
 }
 
-/**
- * Test ExtractFile method of Reader
- */
+// TestExtractFile tests extracting a file from archive
 func TestExtractFile(t *testing.T) {
 	// TODO: add test
 }
 
-/**
- * Test Extract method of Reader
- */
+// TestExtract tests extracting all files from archive
 func TestExtract(t *testing.T) {
 	// TODO: add test
 }
 
-/**
- * Test GetFilesCount method of Reader
- */
+// TestGetFilesCount tests enumerating the files in archive
 func TestGetFilesCount(t *testing.T) {
 	path := _getPathToTests(t)
 	// create a new reader instance with the test archive

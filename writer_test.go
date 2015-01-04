@@ -33,9 +33,7 @@ import (
 	"testing"
 )
 
-/**
- * Test creating a new writer
- */
+// TestNewWriter tests creating a new writer
 func TestNewWriter(t *testing.T) {
 	// test creating a writer
 	w, err := NewWriter("testing.wpress")
@@ -49,6 +47,7 @@ func TestNewWriter(t *testing.T) {
 	}
 }
 
+// TestInit tests Writer constructor
 func TestInit(t *testing.T) {
 	// test creating a writer
 	w, err := NewWriter("testing.wpress")
@@ -62,9 +61,7 @@ func TestInit(t *testing.T) {
 	}
 }
 
-/**
- * Test AddFile method of Writer
- */
+// TestAddFile tests adding af file
 func TestAddFile(t *testing.T) {
 	// obtain cwd
 	cwd, err := os.Getwd()
@@ -128,9 +125,7 @@ func TestAddFile(t *testing.T) {
 	}
 }
 
-/**
- * Test AddDirectory method of Writer
- */
+// TestAddDirectory tests adding a directory
 func TestAddDirectory(t *testing.T) {
 	// obtain cwd
 	cwd, err := os.Getwd()
@@ -183,6 +178,7 @@ func TestAddDirectory(t *testing.T) {
 	}
 }
 
+// TestClose tests closing archive
 func TestClose(t *testing.T) {
 	// obtain cwd
 	cwd, err := os.Getwd()
@@ -245,7 +241,7 @@ func TestClose(t *testing.T) {
 		t.Errorf("Unable to read from the archive: %s", err)
 	}
 
-	if bytes.Compare(data, h.GetEofBlock()) != 0 {
+	if bytes.Compare(data, h.GetEOFBlock()) != 0 {
 		t.Errorf("EOF sequence was not found at the end of the file")
 	}
 }
