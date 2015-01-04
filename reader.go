@@ -90,7 +90,7 @@ func (r Reader) GetHeaderBlock() ([]byte, error) {
 	}
 
 	if bytesRead != headerSize {
-		return nil, errors.New("Unable to read header block size")
+		return nil, errors.New("unable to read header block size")
 	}
 
 	return block, nil

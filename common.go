@@ -89,7 +89,7 @@ func (h *Header) PopulateFromFilename(filename string) error {
 	size := strconv.FormatInt(fi.Size(), 10)
 	// validate if filesize fits the allowed length
 	if len(size) > contentSize {
-		return errors.New("File size is larger than max allowed")
+		return errors.New("file size is larger than max allowed")
 	}
 	// create size buffer
 	h.Size = make([]byte, contentSize)
@@ -99,7 +99,7 @@ func (h *Header) PopulateFromFilename(filename string) error {
 	// get last modified date as string
 	unixTime := strconv.FormatInt(fi.ModTime().Unix(), 10)
 	if len(unixTime) > mtimeSize {
-		return errors.New("Last modified date is after than max allowed")
+		return errors.New("last modified date is after than max allowed")
 	}
 	// create mtime buffer
 	h.Mtime = make([]byte, mtimeSize)
@@ -110,7 +110,7 @@ func (h *Header) PopulateFromFilename(filename string) error {
 	_path := path.Dir(filename)
 	// validate if path fits the allowed length
 	if len(_path) > prefixSize {
-		return errors.New("Prefix size is longer than max allowed")
+		return errors.New("prefix size is longer than max allowed")
 	}
 	// create buffer to put the prefix in
 	h.Prefix = make([]byte, prefixSize)
