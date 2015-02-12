@@ -28,7 +28,7 @@ import (
 	"bytes"
 	"errors"
 	"os"
-	"path"
+	"path/filepath"
 	"strconv"
 )
 
@@ -107,7 +107,7 @@ func (h *Header) PopulateFromFilename(filename string) error {
 	copy(h.Mtime, unixTime)
 
 	// get the path to the file
-	_path := path.Dir(filename)
+	_path := filepath.Dir(filename)
 	// validate if path fits the allowed length
 	if len(_path) > prefixSize {
 		return errors.New("prefix size is longer than max allowed")
