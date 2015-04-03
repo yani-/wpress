@@ -83,7 +83,27 @@ func TestReaderInit(t *testing.T) {
 
 // TestExtractFile tests extracting a file from archive
 func TestExtractFile(t *testing.T) {
-	// TODO: add test
+	path := _getPathToTests(t)
+	// create a new reader instace with the test archive
+	r, err := NewReader(path + string(os.PathSeparator) + "test_archive.wpress")
+	if err != nil {
+		t.Errorf("Failed to create a new Reader instance: %s", err)
+	}
+
+	// extract files
+	filesCount, err := r.Extract()
+
+	if err != nil {
+		t.Errorf("Unable to extract files: %s", err)
+	}
+
+	// check if total files equals 3
+	if 3 != filesCount {
+		t.Errorf(
+			"The archive contains %d files instead of 3",
+			filesCount)
+	}
+
 }
 
 // TestExtract tests extracting all files from archive

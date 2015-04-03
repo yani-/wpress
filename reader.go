@@ -27,7 +27,9 @@ package wpress
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"os"
+	"path"
 )
 
 // Reader structure
@@ -73,9 +75,77 @@ func (r Reader) ExtractFile(filename string, path string) ([]byte, error) {
 }
 
 // Extract all files from archive
-func (r Reader) Extract(s string) error {
-	// TODO: implement
-	return nil
+func (r Reader) Extract() (int, error) {
+	// put pointer at the beginning of the file
+	r.File.Seek(0, 0)
+
+	// loop until end of file was reached
+	for {
+		// read header block
+		block, err := r.GetHeaderBlock()
+		if err != nil {
+			return 0, err
+		}
+
+		// initialize new header
+		h := &Header{}
+
+		// check if block equals EOF sequence
+		if bytes.Compare(block, h.GetEOFBlock()) == 0 {
+			// EOF reached, stop the loop
+			break
+		}
+
+		// populate header from our block bytes
+		h.PopulateFromBytes(block)
+
+		pathToFile := path.Clean("." + string(os.PathSeparator) + string(bytes.Trim(h.Prefix, "\x00")) + string(os.PathSeparator) + string(bytes.Trim(h.Name, "\x00")))
+
+		err = os.MkdirAll(path.Dir(pathToFile), 0777)
+		if err != nil {
+			fmt.Println(err)
+			return r.NumberOfFiles, err
+		}
+
+		// try to open the file
+		file, err := os.Create(pathToFile)
+		if err != nil {
+			return r.NumberOfFiles, err
+		}
+
+		totalBytesToRead, _ := h.GetSize()
+		for {
+			bytesToRead := 512
+			if bytesToRead > totalBytesToRead {
+				bytesToRead = totalBytesToRead
+			}
+
+			if bytesToRead == 0 {
+				break
+			}
+
+			content := make([]byte, bytesToRead)
+			bytesRead, err := r.File.Read(content)
+			if err != nil {
+				return r.NumberOfFiles, err
+			}
+
+			totalBytesToRead -= bytesRead
+			contentRead := content[0:bytesRead]
+
+			_, err = file.Write(contentRead)
+			if err != nil {
+				return r.NumberOfFiles, err
+			}
+		}
+
+		file.Close()
+
+		// increment file counter
+		r.NumberOfFiles++
+	}
+
+	return r.NumberOfFiles, nil
 }
 
 // GetHeaderBlock reads and returns header block from archive
