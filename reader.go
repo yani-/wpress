@@ -76,6 +76,13 @@ func (r Reader) ExtractFile(filename string, path string) ([]byte, error) {
 
 // Extract all files from archive
 func (r Reader) Extract() (int, error) {
+	outputPath := "."
+	NumberOfFiles, err := r.ExtractToPath(outputPath)
+	return NumberOfFiles, err
+}
+
+// Extract all files from archive
+func (r Reader) ExtractToPath(outputPath string) (int, error) {
 	// put pointer at the beginning of the file
 	r.File.Seek(0, 0)
 
@@ -99,7 +106,7 @@ func (r Reader) Extract() (int, error) {
 		// populate header from our block bytes
 		h.PopulateFromBytes(block)
 
-		pathToFile := path.Clean("." + string(os.PathSeparator) + string(bytes.Trim(h.Prefix, "\x00")) + string(os.PathSeparator) + string(bytes.Trim(h.Name, "\x00")))
+		pathToFile := path.Clean(outputPath + string(os.PathSeparator) + string(bytes.Trim(h.Prefix, "\x00")) + string(os.PathSeparator) + string(bytes.Trim(h.Name, "\x00")))
 
 		err = os.MkdirAll(path.Dir(pathToFile), 0777)
 		if err != nil {
@@ -146,6 +153,7 @@ func (r Reader) Extract() (int, error) {
 	}
 
 	return r.NumberOfFiles, nil
+
 }
 
 // GetHeaderBlock reads and returns header block from archive
